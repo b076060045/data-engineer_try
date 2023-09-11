@@ -1,9 +1,9 @@
 version: '3.0'
 services:
   api:
-    image: try
+    image: try_try
     ports:
-        - 88:8888
+        - 8888:8888
     hostname: "api"
     restart: always
     environment:

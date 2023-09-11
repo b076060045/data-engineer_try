@@ -21,17 +21,16 @@ def get_mysql_nba_conn():
 
 @app.get("/")
 def first_page():
-    return {'Hello':'This is the page of NBA STATS'}
+    return {'Hello':'This is the page of NBA STATS by Jason'}
 
 @app.get("/{select_year}")
-def get_data(select_year):
+def get_data_team(select_year):
     session = get_mysql_nba_conn()
-    sql = text(f"select * from `{select_year}`")
+    sql = text(f"""select * from `{select_year}`""")
     df = session.execute(sql)
     df = pd.DataFrame(df.mappings().all())
     df_dict = df.to_dict('records')
     session.commit()
-    print(df_dict)
     return {'data':df_dict}
 
 @app.get("/{select_year}/{item}")
@@ -44,5 +43,5 @@ def get_data(select_year, item):
     session.commit()
     return {'data':df_dict}
 
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=8888)
+
+

@@ -1,26 +1,25 @@
-# 建構基礎image
-from ubuntu:18.04
-# 系統升級 安裝Python
-run apt-get update && apt-get install python3.6 -y && apt-get install python3-pip -y
-# 建立資料夾
-run mkdir /NBA
-# 把現在工作環境下的資料夾完全複製
-copy . /NBA/
-# 轉換工作路徑
-workdir /NBA/
+# 由於 continuumio/miniconda3:4.3.27 中的 Debian
+# 版本太舊，因此改用 ubuntu 系統
+FROM ubuntu:18.04
 
-#env 環境設置
-env LC_ALL = C.UTF-8
-env LANC = C.UTF-8
+# 系統升級、安裝 python
+RUN apt-get update && apt-get install python3.6 -y && apt-get install python3-pip -y
 
-#install package
-run pip3 install pipenv==2020.6.2
-#下載在pipfile.lock裡的所有套件
-run pip3 install sync
+RUN mkdir /NBA
+COPY . /NBA/
+WORKDIR /NBA/
 
-#genenv
-run version=relaese python3 genenv.py
+# env
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
 
+# install package
+RUN pip3 install pipenv==2020.6.2
+RUN pip3 install -r requirements.txt
+
+# genenv
+#RUN VERSION=relaese python3 genenv.py
 expose 8888
-#cmd預設指令
-#CMD ["poetry", "run", "uvicorn", "make_api:app", "--host", "0.0.0.0", "--port", "8888"]
+
+# 預設執行的指令
+CMD ["pipenv", "run", "uvicorn", "make_api:app", "--host", "0.0.0.0", "--port", "8888"]
